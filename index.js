@@ -13,6 +13,7 @@ connectToMongoDB(process.env.MONGOURI).then(() => {
 app.use(express.json());
 
 app.use("/url", urlRoutes);
+app.use("/", urlRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is running on http://localhost:${PORT}`);
