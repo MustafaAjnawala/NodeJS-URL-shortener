@@ -55,4 +55,4 @@ A simple URL shortener service built with Node.js, Express, and MongoDB.
 
 ## License
 
-This project is open source and available under the [ISC License](LICENSE).
+This project is open source and available under the [BSD 2-Clause License](LICENSE).
