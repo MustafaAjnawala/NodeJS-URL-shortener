@@ -13,7 +13,12 @@ async function handleGenerateNewShortUrl(req, res) {
     visitHistory: [],
   });
 
-  return res.json({ result: result, shortID: short });
+  return res.render("home", {
+    //for server side rendering purposes
+    shortID: short,
+  });
+  // cld use below for client side rendering
+  // return res.json({ result: result, shortID: short });
 }
 
 async function handleRedirectFromId(req, res) {
@@ -44,7 +49,7 @@ async function handleGetAnalyticsForId(req, res) {
       .status(400)
       .json({ msg: "please provide a valid short id to view analytics" });
   return res.json({
-    totalClicks: result.visitHistory.length,
+    totalRedirects: result.visitHistory.length,
     analytics: result.visitHistory,
   });
 }
