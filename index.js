@@ -1,10 +1,15 @@
 const express = require("express");
 const path = require("path");
 const connectToMongoDB = require("./mongoConnect");
-const urlRoutes = require("./routes/url");
-const staticRoutes = require("./routes/staticRouter");
+const cookieParser = require("cookie-parser");
+const { restrictToLoggedInUsers, checkAuth } = require("./middlewares/auth");
+
 require("dotenv").config();
 const PORT = 8080;
+
+const urlRoutes = require("./routes/url");
+const staticRoutes = require("./routes/staticRouter");
+const userRoutes = require("./routes/user");
 
 const app = express();
 
@@ -19,9 +24,11 @@ app.set("views", path.resolve("./views"));
 //middlewares to accept json and form data too
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-app.use("/url", urlRoutes);
-app.use("/", staticRoutes);
+app.use("/url", restrictToLoggedInUsers, urlRoutes);
+app.use("/", checkAuth, staticRoutes);
+app.use("/user", checkAuth, userRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is running on http://localhost:${PORT}`);
