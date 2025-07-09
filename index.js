@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const connectToMongoDB = require("./mongoConnect");
 const cookieParser = require("cookie-parser");
-const { restrictToLoggedInUsers, checkAuth } = require("./middlewares/auth");
+const { checkForAuthentication, restrictTo } = require("./middlewares/auth");
 
 require("dotenv").config();
 const PORT = 8080;
@@ -25,10 +25,11 @@ app.set("views", path.resolve("./views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(checkForAuthentication);
 
-app.use("/url", restrictToLoggedInUsers, urlRoutes);
-app.use("/", checkAuth, staticRoutes);
-app.use("/user", checkAuth, userRoutes);
+app.use("/url", restrictTo(["NORMAL", "ADMIN"]), urlRoutes);
+app.use("/", staticRoutes);
+app.use("/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is running on http://localhost:${PORT}`);
